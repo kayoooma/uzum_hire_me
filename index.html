@@ -137,6 +137,14 @@
     /* для изображений по умолчанию — плавный shimmer пока грузится data:URI */
     .img{background:linear-gradient(90deg,#fff7cc,#fff1a1,#fff7cc);background-size:200% 100%;animation:shimmer 2.2s linear infinite}
     @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+      /* FIX: overlay не перекрывает портрет на мобильных */
+    .overlay.outside{position:static; margin:12px 0 0; max-width:100%; backdrop-filter:none}
+    @media (max-width:560px){
+      .hero{aspect-ratio:4/5}
+      .main-photo{inset:8px}
+      .tag{top:8px;left:8px}
+      .ribbon{right:-32px;top:10px;padding:6px 38px;font-size:12px}
+    }
   </style>
 </head>
 <body>
@@ -536,6 +544,27 @@
     function applyCase(key, src){ const c = CASES[key]; if(!c) return; caseTag.textContent = c.tag; caseTitle.textContent = c.title; caseList.innerHTML = c.points.map(p=>`<li>${p}</li>`).join(''); caseLink.href = c.link; if(src) mainPhoto.src = generators[src.split('/').pop()]? generators[src.split('/').pop()](): src; }
     thumbs.forEach(t=>{ t.addEventListener('click',()=>{ thumbs.forEach(x=>x.classList.remove('active')); t.classList.add('active'); applyCase(t.dataset.key, t.dataset.src); }); });
     applyCase('portrait');
+      // === Мобильная перестановка overlay, чтобы не закрывал портрет ===
+    (function(){
+      const heroEl = document.getElementById('hero');
+      const overlay = document.getElementById('caseOverlay');
+      let t;
+      function relocate(){
+        if(window.innerWidth <= 560){
+          if(!overlay.classList.contains('outside')){
+            heroEl.insertAdjacentElement('afterend', overlay);
+            overlay.classList.add('outside');
+          }
+        } else {
+          if(overlay.classList.contains('outside')){
+            heroEl.appendChild(overlay);
+            overlay.classList.remove('outside');
+          }
+        }
+      }
+      window.addEventListener('load', relocate);
+      window.addEventListener('resize', ()=>{ clearTimeout(t); t=setTimeout(relocate, 120); });
+    })();
   </script>
 </body>
 </html>
