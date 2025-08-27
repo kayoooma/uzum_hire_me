@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Комил Султонов — PM как продукт (Uzum‑style)</title>
+  <meta name="description" content="Карточка‑резюме Project Manager в формате маркетплейса, стилизованная под опыт Uzum Market. Навыки, кейсы, условия сотрудничества, CTA." />
+  <meta property="og:title" content="Комил Султонов — PM как продукт (Uzum‑style)" />
+  <meta property="og:description" content="Интерактивная карточка‑резюме: навыки, кейсы, отзывы, CTA. Узбекский рынок, e‑commerce, финтех, AI/ML." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kayoooma.github.io/project_manager" />
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#0f172a;         /* slate-900 */
+      --muted:#475569;        /* slate-600 */
+      --card:#ffffff;
+      --line:#e2e8f0;         /* slate-200 */
+      --soft:#f8fafc;         /* slate-50 */
+      --uzum:#6f3cff;         /* фирменный фиолетовый вайб */
+      --uzum-2:#9b7cff;       /* светлее для градиента */
+      --ok:#16a34a;           /* green-600 */
+      --warn:#f59e0b;         /* amber-500 */
+      --danger:#ef4444;       /* red-500 */
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(17,24,39,.08);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--soft);color:var(--text);font:16px/1.5 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial}
+    a{color:var(--uzum);text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    .container{max-width:1180px;margin:24px auto;padding:0 16px}
+    header{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+    .logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--uzum),var(--uzum-2))}
+    .badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);color:#475569;padding:6px 10px;border-radius:999px;font-size:12px;background:#fff}
+    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+
+    /* left: gallery */
+    .gallery{padding:16px}
+    .hero{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;aspect-ratio:16/10;display:grid;place-items:center;overflow:hidden}
+    .tag{position:absolute;left:12px;top:12px}
+    .ribbon{position:absolute;right:-50px;top:18px;background:linear-gradient(135deg,var(--uzum),var(--uzum-2));color:#fff;padding:8px 60px;transform:rotate(15deg);font-weight:700}
+    .thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+    .thumb{background:#fff;border:1px solid var(--line);border-radius:12px;aspect-ratio:16/10;display:grid;place-items:center;cursor:pointer}
+    .thumb:hover{border-color:#c7d2fe}
+
+    /* right: details */
+    .details{padding:18px 18px 10px}
+    .title{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+    h1{font-size:26px;margin:0}
+    .sub{color:var(--muted);margin-top:4px}
+    .rating{display:flex;align-items:center;gap:10px;margin-top:10px;color:#111827}
+    .stars{color:#f59e0b;letter-spacing:1px}
+
+    .price{margin-top:16px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+    .price .now{font-size:28px;font-weight:800;color:#111827}
+    .price .old{color:#9ca3af;text-decoration:line-through}
+    .price .install{font-size:14px;color:#374151;background:#eef2ff;border:1px solid #e0e7ff;border-radius:999px;padding:4px 10px}
+
+    .benefits{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .benefit{display:inline-flex;align-items:center;gap:6px;background:#f1f5f9;color:#0f172a;border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-size:13px}
+
+    .cta{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+    .btn{appearance:none;border:0;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer}
+    .btn-primary{background:linear-gradient(135deg,var(--uzum),var(--uzum-2));color:#fff}
+    .btn-ghost{background:#fff;border:1px solid var(--line);color:#111827}
+
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+    @media (max-width:720px){.split{grid-template-columns:1fr}}
+
+    .panel{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}
+    .panel h3{margin:0 0 8px 0;font-size:16px}
+    .list{display:grid;gap:8px;margin:0;padding-left:18px}
+
+    .specs{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:8px}
+    .specs div{padding:8px 10px;border-bottom:1px dashed #e5e7eb;color:#0f172a}
+    .specs div:nth-child(odd){color:#475569}
+
+    details{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}
+    details+details{margin-top:12px}
+    summary{cursor:pointer;font-weight:700}
+
+    .reviews{display:grid;gap:12px}
+    .review{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}
+    .review .meta{display:flex;gap:8px;align-items:center;color:#64748b}
+
+    .shopinfo{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;color:#0f172a}
+    .shopinfo .i{display:inline-flex;gap:6px;align-items:center;background:#f8fafc;border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-size:13px}
+
+    footer{margin:28px 0 40px;color:#64748b;text-align:center}
+
+    /* sticky mobile bar */
+    .stickybar{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.95);backdrop-filter: blur(8px);border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:10px 14px;z-index:20}
+    .stickybar .num{font-weight:800;color:#0f172a}
+    @media (min-width:860px){.stickybar{display:none}}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Project Manager как продукт — Комил Султонов",
+    "description": "Карточка-резюме PM: навыки, кейсы, условия сотрудничества, контакты. Uzum-style.",
+    "brand": {"@type": "Brand", "name": "Personal"},
+    "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "27"},
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "UZS",
+      "price": "0",
+      "availability": "https://schema.org/InStock",
+      "url": "https://kayoooma.github.io/project_manager"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <div class="badge">🛒 Узбекский рынок • Uzum‑style карточка</div>
+        <h2 style="margin:6px 0 0 0">Комил Султонов — Project Manager</h2>
+        <div class="sub">FinTech • AI/ML • E‑commerce • Автоматизация</div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- LEFT: GALLERY -->
+      <section class="card gallery">
+        <div class="hero" id="hero">
+          <span class="badge tag">📦 Артикул: PM‑001</span>
+          <span class="ribbon">Хит для e‑commerce</span>
+          <!-- Простая иллюстрация как заглушка -->
+          <svg viewBox="0 0 600 400" role="img" aria-label="Витрина продукта">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1">
+                <stop offset="0%" stop-color="#6f3cff"/>
+                <stop offset="100%" stop-color="#9b7cff"/>
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="600" height="400" fill="#ffffff"/>
+            <g opacity="0.15">
+              <circle cx="130" cy="120" r="90" fill="url(#g1)"/>
+              <circle cx="520" cy="240" r="130" fill="#6f3cff"/>
+              <circle cx="300" cy="320" r="70" fill="#9b7cff"/>
+            </g>
+            <g fill="#0f172a" font-size="18" font-family="Inter,system-ui" opacity="0.95">
+              <text x="36" y="60">Project Manager как продукт</text>
+              <text x="36" y="90">• Стратегия • Данные • Автоматизация • Delivery</text>
+              <text x="36" y="350">Демо‑проекты, метрики, отзывы — справа</text>
+            </g>
+          </svg>
+        </div>
+        <div class="thumbs">
+          <div class="thumb" data-img="case1" title="Кейс: Финтех">💳</div>
+          <div class="thumb" data-img="case2" title="Кейс: AI/ML">🤖</div>
+          <div class="thumb" data-img="case3" title="Метрики/дашборд">📈</div>
+          <div class="thumb" data-img="case4" title="UX/автоматизация">⚙️</div>
+        </div>
+      </section>
+
+      <!-- RIGHT: DETAILS -->
+      <section class="card details">
+        <div class="title">
+          <h1>PM как продукт: управляет, меряет, доставляет</h1>
+          <span class="badge">🇺🇿 Готов к офферу в Узбекистане</span>
+        </div>
+        <div class="sub">Опыт: платежи, реферальные системы, аналитика, Telegram/боты, браузерные расширения. Фокус на e‑commerce и финтех.</div>
+
+        <div class="rating">
+          <div class="stars">★★★★★</div>
+          <div>4.9/5 • 27 отзывов • <a href="#reviews">читать отзывы</a></div>
+        </div>
+
+        <div class="price">
+          <div class="now">Цена: договорная</div>
+          <div class="old">Старая цена: —</div>
+          <div class="install">Bo'lib to'lash / Рассрочка — по согласованию</div>
+        </div>
+
+        <div class="benefits">
+          <span class="benefit">🚚 Доставка ценности: с первой недели</span>
+          <span class="benefit">🛡️ Риски под контролем</span>
+          <span class="benefit">📦 MVP быстро, масштабирование планово</span>
+          <span class="benefit">📊 Метрики: DAU/MAU, Retention, LTV</span>
+        </div>
+
+        <div class="cta">
+          <a class="btn btn-primary" href="https://kayoooma.github.io/superlink/" target="_blank" rel="noopener">🛒 Добавить в корзину (связаться)</a>
+          <a class="btn btn-ghost" href="https://kayoooma.github.io/project_manager" target="_blank" rel="noopener">⚡ Купить сейчас (перейти на сайт‑резюме)</a>
+          <a class="btn btn-ghost" href="#specs">🧰 Характеристики</a>
+        </div>
+
+        <div class="shopinfo">
+          <div class="i">🏬 Продавец: Комил Султонов</div>
+          <div class="i">📍 Локация: Ташкент</div>
+          <div class="i">⏱️ Ответ: обычно в течение 1 часа</div>
+        </div>
+
+        <div class="split">
+          <div class="panel">
+            <h3>Описание</h3>
+            <p style="margin:0;color:#0f172a">Project Manager с упором на скорость ценности и прозрачную коммуникацию. Понимаю dev‑процессы, считаю метрики, автоматизирую рутину. Отлично подхожу для e‑commerce, финтеха и AI‑инициатив.</p>
+          </div>
+          <div class="panel" id="specs">
+            <h3>Характеристики</h3>
+            <div class="specs">
+              <div>Тип</div><div>Project / Product Management</div>
+              <div>Домены</div><div>FinTech, E‑com, AI/ML, B2C/B2B</div>
+              <div>Навыки</div><div>Roadmaps, KPI, Data‑driven, UX, Integrations</div>
+              <div>Техбаза</div><div>SQL, Python (баз.), REST, Webhooks, Git</div>
+              <div>Инструменты</div><div>Jira, Notion, Figma, GA/Looker, Telegram API</div>
+              <div>Языки</div><div>RU / EN</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="split" style="margin-top:8px">
+          <div class="panel">
+            <h3>Кейсы (коротко)</h3>
+            <ul class="list">
+              <li>💳 Финтех‑бот: подписки, платежи, рефералка, управление устройствами</li>
+              <li>⚙️ Автоматизация: локальный сервер + расширение для браузера</li>
+              <li>📈 Метрики продукта: DAU/MAU, retention, ARPU, конверсии</li>
+              <li>🤖 AI: ассистенты, классификация отзывов</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3>FAQ</h3>
+            <details>
+              <summary>Как быстро начнем приносить ценность?</summary>
+              <div style="margin-top:8px;color:#0f172a">С первого спринта: быстрый аудит, KPI, план итераций, прозрачная синхронизация.</div>
+            </details>
+            <details>
+              <summary>Формат работы?</summary>
+              <div style="margin-top:8px;color:#0f172a">Full‑time / Part‑time / Проект. Онлайн/офис — гибко.</div>
+            </details>
+            <details>
+              <summary>Про риски и сроки</summary>
+              <div style="margin-top:8px;color:#0f172a">Реестр рисков, буферы, ранняя эскалация, критерии go/no‑go.</div>
+            </details>
+          </div>
+        </div>
+
+        <div class="panel" id="reviews" style="margin:16px 0 8px">
+          <h3>Отзывы</h3>
+          <div class="reviews">
+            <div class="review">
+              <div class="meta">★★★★★ • Руководитель разработки</div>
+              <div>«Комил держит цели и цифры в фокусе, команда чувствует поддержку. MVP раньше срока, гипотезы — по плану.»</div>
+            </div>
+            <div class="review">
+              <div class="meta">★★★★★ • Продукт‑дизайнер</div>
+              <div>«Силен и в UX, и в процессах. Фидбек быстрый, решения прозрачные.»</div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </div>
+
+    <footer>
+      Сделано для рынка Узбекистана • <a href="https://kayoooma.github.io/superlink/" target="_blank" rel="noopener">все ссылки</a>
+    </footer>
+  </div>
+
+  <!-- Sticky mobile bar -->
+  <div class="stickybar">
+    <div>
+      <div style="font-size:12px;color:#64748b">Project Manager как продукт</div>
+      <div class="num">Готов к сотрудничеству</div>
+    </div>
+    <a class="btn btn-primary" href="https://kayoooma.github.io/superlink/" target="_blank" rel="noopener">📞 Связаться</a>
+  </div>
+
+  <script>
+    // Мини‑интеракции галереи: меняем плашку на hero
+    const hero = document.getElementById('hero');
+    document.querySelectorAll('.thumb').forEach(t=>{
+      t.addEventListener('click',()=>{
+        const k = t.getAttribute('data-img');
+        hero.querySelector('.tag').textContent = ({
+          case1:'💳 Кейс: платёжная логика',
+          case2:'🤖 Кейс: AI/ассистент',
+          case3:'📈 Кейс: метрики/дашборд',
+          case4:'⚙️ Кейс: автоматизация'
+        })[k] || '📦 Артикул: PM‑001';
+      })
+    })
+  </script>
+</body>
+</html>
