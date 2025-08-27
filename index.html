@@ -19,6 +19,8 @@
     }
     *{box-sizing:border-box}
     html,body{height:100%}
+    /* плавный скролл по якорям */
+    html{scroll-behavior:smooth}
     body{margin:0;background:var(--soft);color:var(--text);font:16px/1.5 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial}
     a{color:var(--uzum);text-decoration:none}
     a:hover{text-decoration:underline}
@@ -119,6 +121,8 @@
     .specs{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:8px}
     .specs div{padding:8px 10px;border-bottom:1px dashed #e5e7eb;color:#0f172a}
     .specs div:nth-child(odd){color:#475569}
+    /* мягкий скролл-отступ при переходе к #specs */
+    #specs{scroll-margin-top:20px}
 
     details{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}
     details+details{margin-top:12px}
@@ -157,6 +161,31 @@
     .qr{width:140px;height:140px;border:1px solid var(--line);border-radius:12px;object-fit:cover}
     .kassa{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px}
     .small{font-size:12px;color:#64748b}
+
+    /* Плейсхолдеры-заглушки для картинок */
+    .img{background:linear-gradient(90deg,#f8fafc, #eef2ff, #f8fafc);background-size:200% 100%;animation:shimmer 2.2s linear infinite}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    /* ===== Быстрая оплата (bottom sheet) ===== */
+    .sheet-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:70}
+    .sheet-overlay.show{opacity:1;pointer-events:auto}
+    .sheet{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top-left-radius:20px;border-top-right-radius:20px;box-shadow:0 -20px 40px rgba(15,23,42,.2);transform:translateY(100%);transition:transform .35s ease;z-index:80}
+    .sheet.show{transform:translateY(0)}
+    .sheet .head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}
+    .sheet .body{padding:16px;display:grid;gap:12px}
+    .methods{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .method{position:relative;border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;place-items:center;cursor:pointer}
+    .method input{position:absolute;opacity:0}
+    .method span{font-weight:700}
+    .method[data-pay="Uzcard"]{background:#f0fdf4}
+    .method[data-pay="Humo"]{background:#eff6ff}
+    .method[data-pay="Visa"]{background:#f8fafc}
+    .method input:checked + span{outline:2px solid #a5b4fc;outline-offset:2px;border-radius:10px;padding:6px 10px}
+    .bid{display:grid;gap:8px}
+    .bidrow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+    .bidrow input{padding:12px;border:1px solid var(--line);border-radius:12px;font-weight:700}
+    .uzs{padding:10px 12px;border:1px dashed #c7d2fe;border-radius:12px}
+    .sheet-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:6px}
   </style>
 </head>
 <body>
@@ -185,7 +214,7 @@
       <!-- LEFT: GALLERY -->
       <section class="card gallery">
         <div class="hero" id="hero">
-          <img id="mainPhoto" class="main-photo" alt="Фото товара" src="assets/portrait.jpg"/>
+          <img id="mainPhoto" class="main-photo" alt="Портрет" src="assets/portrait.jpg" data-ph="Портрет"/>
           <span class="badge tag" id="caseTag">📦 Артикул: PM‑001</span>
           <span class="ribbon">Хит для e‑commerce</span>
           <div class="overlay" id="caseOverlay">
@@ -202,32 +231,32 @@
           </div>
         </div>
         <div class="thumbs" id="thumbs">
-          <div class="thumb active" data-key="portrait" data-src="assets/portrait.jpg"><img alt="Портрет" src="assets/portrait.jpg"></div>
-          <div class="thumb" data-key="tgbots" data-src="assets/hero_tgbots.jpg"><img alt="TG Bots" src="assets/hero_tgbots.jpg"></div>
-          <div class="thumb" data-key="music" data-src="assets/hero_music.jpg"><img alt="Music Bot" src="assets/hero_music.jpg"></div>
-          <div class="thumb" data-key="vocab" data-src="assets/hero_vocab.jpg"><img alt="Vocab" src="assets/hero_vocab.jpg"></div>
-          <div class="thumb" data-key="sites" data-src="assets/hero_sites.jpg"><img alt="Sites" src="assets/hero_sites.jpg"></div>
+          <div class="thumb active" data-key="portrait" data-src="assets/portrait.jpg"><img alt="Портрет" src="assets/portrait.jpg" data-ph="Портрет"></div>
+          <div class="thumb" data-key="tgbots" data-src="assets/hero_tgbots.jpg"><img alt="TG Bots" src="assets/hero_tgbots.jpg" data-ph="TG Bots"></div>
+          <div class="thumb" data-key="music" data-src="assets/hero_music.jpg"><img alt="Music Bot" src="assets/hero_music.jpg" data-ph="Music Bot"></div>
+          <div class="thumb" data-key="vocab" data-src="assets/hero_vocab.jpg"><img alt="Vocab" src="assets/hero_vocab.jpg" data-ph="Vocab"></div>
+          <div class="thumb" data-key="sites" data-src="assets/hero_sites.jpg"><img alt="Sites" src="assets/hero_sites.jpg" data-ph="Sites"></div>
         </div>
 
         <!-- WIDE BANNERS: desktop 970x250 / tablet 728x90 -->
-        <div class="wide desktop"><div class="inner"><img src="assets/banner_970x250.jpg" alt="Экспресс‑аудит" style="width:100%;height:auto;border-radius:12px"/></div></div>
-        <div class="wide tablet"><div class="inner"><img src="assets/banner_728x90.jpg" alt="Экспресс‑аудит" style="width:100%;height:auto;border-radius:10px"/></div></div>
+        <div class="wide desktop"><div class="inner"><img class="img" src="assets/banner_970x250.jpg" data-ph="Баннер 970×250" alt="Экспресс‑аудит" style="width:100%;height:auto;border-radius:12px"/></div></div>
+        <div class="wide tablet"><div class="inner"><img class="img" src="assets/banner_728x90.jpg" data-ph="Баннер 728×90" alt="Экспресс‑аудит" style="width:100%;height:auto;border-radius:10px"/></div></div>
 
         <!-- РЕКЛАМА / САМОРЕКЛАМА -->
         <div class="ads" aria-label="Рекламные блоки (имитация)">
-          <div class="ad"><span class="sponsor">Реклама — имитация</span><img class="img" alt="PM‑дашборд" src="assets/ad_dashboard.jpg"/><div class="content"><h4>PM‑Дашборд для тимлидов</h4><p>Burn‑up, cycle time, риски. Импорт CSV. Бесплатно.</p><a class="btn btn-ghost" href="https://kayoooma.github.io/project_manager" target="_blank" rel="noopener">Открыть демо</a></div></div>
-          <div class="ad"><span class="sponsor">Реклама — имитация</span><img class="img" alt="Резюме‑игра" src="assets/ad_game.jpg"/><div class="content"><h4>Резюме‑сайт + мини‑игра</h4><p>3 уровня: Discovery → Delivery → Crisis. Скоро.</p><a class="btn btn-ghost" href="https://kayoooma.github.io/project_manager" target="_blank" rel="noopener">Следить</a></div></div>
-          <div class="ad tall"><span class="sponsor">Реклама — имитация</span><img class="img" alt="Telegram‑бот" src="assets/ad_bot.jpg"/><div class="content"><h4>Telegram‑бот ассистент</h4><p>Ежедневные сводки по задачам в Telegram. Напомнит о дедлайнах.</p><a class="btn btn-primary" href="https://kayoooma.github.io/superlink/" target="_blank" rel="noopener">Связаться</a></div></div>
-          <div class="ad tall"><span class="sponsor">Реклама — имитация</span><img class="img" alt="Uzum ready" src="assets/ad_uzum.jpg"/><div class="content"><h4>Uzum Unicorn ready</h4><p>Рост e‑com: промо‑механики, конверсия, повторные покупки.</p><a class="btn btn-primary" href="https://kayoooma.github.io/superlink/" target="_blank" rel="noopener">Обсудить</a></div></div>
+          <div class="ad"><span class="sponsor">Реклама — имитация</span><img class="img" alt="PM‑дашборд" src="assets/ad_dashboard.jpg" data-ph="PM‑дашборд"/><div class="content"><h4>PM‑Дашборд для тимлидов</h4><p>Burn‑up, cycle time, риски. Импорт CSV. Бесплатно.</p><a class="btn btn-ghost" href="https://kayoooma.github.io/project_manager" target="_blank" rel="noopener">Открыть демо</a></div></div>
+          <div class="ad"><span class="sponsor">Реклама — имитация</span><img class="img" alt="Резюме‑игра" src="assets/ad_game.jpg" data-ph="Резюме‑игра"/><div class="content"><h4>Резюме‑сайт + мини‑игра</h4><p>3 уровня: Discovery → Delivery → Crisis. Скоро.</p><a class="btn btn-ghost" href="https://kayoooma.github.io/project_manager" target="_blank" rel="noopener">Следить</a></div></div>
+          <div class="ad tall"><span class="sponsor">Реклама — имитация</span><img class="img" alt="Telegram‑бот" src="assets/ad_bot.jpg" data-ph="Telegram‑бот"/><div class="content"><h4>Telegram‑бот ассистент</h4><p>Ежедневные сводки по задачам в Telegram. Напомнит о дедлайнах.</p><a class="btn btn-primary" href="https://kayoooma.github.io/superlink/" target="_blank" rel="noopener">Связаться</a></div></div>
+          <div class="ad tall"><span class="sponsor">Реклама — имитация</span><img class="img" alt="Uzum ready" src="assets/ad_uzum.jpg" data-ph="Uzum ready"/><div class="content"><h4>Uzum Unicorn ready</h4><p>Рост e‑com: промо‑механики, конверсия, повторные покупки.</p><a class="btn btn-primary" href="https://kayoooma.github.io/superlink/" target="_blank" rel="noopener">Обсудить</a></div></div>
         </div>
 
         <!-- часто берут вместе -->
         <div class="bundle">
           <h3>С этим часто берут</h3>
           <div class="bundlegrid">
-            <div class="item"><img alt="Аналитика" src="assets/bundle_analytics.jpg"/><div class="body"><div class="title">Настройка аналитики</div><div class="desc">События, фанаел, e‑commerce tracking. Сводки в Looker/GA.</div><a class="btn btn-ghost cta" href="https://kayoooma.github.io/superlink/" target="_blank" rel="noopener">Обсудить</a></div></div>
-            <div class="item"><img alt="Скрипты" src="assets/bundle_scripts.jpg"/><div class="body"><div class="title">Скрипты для Jira/Notion</div><div class="desc">Автоматизация отчетов, daily‑дайджесты в Telegram.</div><a class="btn btn-ghost cta" href="https://kayoooma.github.io/superlink/" target="_blank" rel="noopener">Запросить</a></div></div>
-            <div class="item"><img alt="ICE" src="assets/bundle_ice.jpg"/><div class="body"><div class="title">Карта гипотез (ICE)</div><div class="desc">Шаблон + дашборд приоритизации. Готово к A/B.</div><a class="btn btn-ghost cta" href="https://kayoooma.github.io/project_manager" target="_blank" rel="noopener">Скачать</a></div></div>
+            <div class="item"><img class="img" alt="Аналитика" src="assets/bundle_analytics.jpg" data-ph="Аналитика"/><div class="body"><div class="title">Настройка аналитики</div><div class="desc">События, фанаел, e‑commerce tracking. Сводки в Looker/GA.</div><a class="btn btn-ghost cta" href="https://kayoooma.github.io/superlink/" target="_blank" rel="noopener">Обсудить</a></div></div>
+            <div class="item"><img class="img" alt="Скрипты" src="assets/bundle_scripts.jpg" data-ph="Скрипты"/><div class="body"><div class="title">Скрипты для Jira/Notion</div><div class="desc">Автоматизация отчетов, daily‑дайджесты в Telegram.</div><a class="btn btn-ghost cta" href="https://kayoooma.github.io/superlink/" target="_blank" rel="noopener">Запросить</a></div></div>
+            <div class="item"><img class="img" alt="ICE" src="assets/bundle_ice.jpg" data-ph="ICE"/><div class="body"><div class="title">Карта гипотез (ICE)</div><div class="desc">Шаблон + дашборд приоритизации. Готово к A/B.</div><a class="btn btn-ghost cta" href="https://kayoooma.github.io/project_manager" target="_blank" rel="noopener">Скачать</a></div></div>
           </div>
         </div>
 
@@ -268,7 +297,7 @@
               <div>Навыки</div><div>Roadmaps, KPI, Data‑driven, UX, Integrations</div>
               <div>Техбаза</div><div>SQL, Python (баз.), REST, Webhooks, Git</div>
               <div>Инструменты</div><div>Jira, Notion, Figma, GA/Looker, Telegram API</div>
-              <div>Языки</div><div>RU / EN</div>
+              <div>Языки</div><div>RU / EN / UZ</div>
             </div>
           </div>
         </div>
@@ -301,6 +330,31 @@
 
   <!-- Sticky mobile bar -->
   <div class="stickybar"><div><div style="font-size:12px;color:#64748b">Project Manager как продукт</div><div class="num">Готов к сотрудничеству</div></div><button class="btn btn-primary" id="openCheckout2">🛍 Оформить</button></div>
+
+  <!-- Быстрая оплата (bottom sheet) -->
+  <div class="sheet-overlay" id="sheetOverlay"></div>
+  <div class="sheet" id="paySheet" role="dialog" aria-modal="true" aria-labelledby="payTitle">
+    <div class="head"><div id="payTitle" style="font-weight:800">Быстрая оплата и аукцион</div><button class="btn btn-ghost" id="closeSheet">✕</button></div>
+    <div class="body">
+      <div style="font-size:14px;color:#475569">Выберите способ оплаты и при желании предложите свою цену. Это демонстрация — реальной оплаты нет, заявка уйдёт в Telegram.</div>
+      <div class="methods">
+        <label class="method" data-pay="Uzcard"><input type="radio" name="pay" value="Uzcard" checked /><span>Uzcard</span></label>
+        <label class="method" data-pay="Humo"><input type="radio" name="pay" value="Humo" /><span>Humo</span></label>
+        <label class="method" data-pay="Visa"><input type="radio" name="pay" value="Visa" /><span>VISA</span></label>
+      </div>
+      <div class="bid">
+        <label style="font-weight:700">Предложить свою цену (аукцион)</label>
+        <div class="bidrow"><input type="number" id="bidInput" min="100000" step="10000" value="2900000"/><span class="uzs">UZS</span></div>
+        <label style="font-weight:700">Ваш Telegram/телефон</label>
+        <input id="bidContact" placeholder="@username или +998…" style="padding:12px;border:1px solid var(--line);border-radius:12px"/>
+      </div>
+      <div class="sheet-actions">
+        <a class="btn btn-ghost" href="https://kayoooma.github.io/superlink/" target="_blank" rel="noopener">Открыть мульти‑ссылку</a>
+        <button class="btn btn-outline" id="openFullCheckout">Полное оформление</button>
+        <button class="btn btn-primary" id="sendBid">Отправить в TG</button>
+      </div>
+    </div>
+  </div>
 
   <!-- CHECKOUT MODAL -->
   <div class="backdrop" id="co">
@@ -343,7 +397,7 @@
         <!-- Step 4 -->
         <div class="row" data-step="4" style="display:none">
           <h3>Оплата</h3>
-          <div class="kassa"><img class="qr" src="assets/payment_qr.png" alt="QR"/><div><b>Способы:</b> Payme / Click / Перевод на карту / Реквизиты юр.лица.<br><span class="small">Это демо‑оплата. После клика «Сформировать счёт» вы получите PDF/текст счёта и инструкции в Telegram/Email.</span></div><div id="totalFinal" style="font-weight:800">—</div></div>
+          <div class="kassa"><img class="qr" src="assets/payment_qr.png" alt="QR"/><div><b>Способы:</b> Uzcard / Humo / VISA / Payme / Click / Перевод на карту / Реквизиты юр.лица.<br><span class="small">Это демо‑оплата. После клика «Сформировать счёт» вы получите PDF/текст счёта и инструкции в Telegram/Email.</span></div><div id="totalFinal" style="font-weight:800">—</div></div>
           <div class="co-actions"><button class="btn btn-ghost" data-prev>Назад</button><button class="btn btn-outline" id="makeInvoice">Сформировать счёт</button><button class="btn btn-primary" id="finishPay">Оплатить</button></div>
         </div>
       </div>
@@ -351,6 +405,15 @@
   </div>
 
   <script>
+    /* === SVG‑плейсхолдеры для всех картинок (если файл не найден) === */
+    function phSrc(label){
+      const svg = `<?xml version='1.0' encoding='UTF-8'?><svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800' viewBox='0 0 1200 800'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#ede9fe'/><stop offset='1' stop-color='#e0e7ff'/></linearGradient></defs><rect width='1200' height='800' fill='url(#g)'/><g fill-opacity='.2'><circle cx='220' cy='220' r='140' fill='#6f3cff'/><circle cx='980' cy='540' r='220' fill='#6f3cff'/></g><text x='50%' y='50%' text-anchor='middle' fill='#475569' font-family='Inter,Arial' font-size='48' font-weight='700'>${label}</text><text x='50%' y='58%' text-anchor='middle' fill='#64748b' font-family='Inter,Arial' font-size='22'>изображение появится позже</text></svg>`;
+      return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg);
+    }
+    document.querySelectorAll('img').forEach(img=>{
+      img.addEventListener('error',()=>{ img.src = phSrc(img.dataset.ph || img.alt || 'Изображение'); });
+    });
+
     /* === Галерея с реальными кейсами === */
     const CASES = {
       portrait: {
@@ -361,7 +424,7 @@
       },
       tgbots: {
         tag: '🤖 TG Bots Suite',
-        title: 'Подписки, рефералка, устройства, API, FX',
+        title: 'Подписки, рефералька, устройства, API, FX',
         points: ['Подписочная система и реферальная логика','Управление устройствами, API‑интеграции','Автоконвертация валют'],
         link: 'https://kayoooma.github.io/superlink/'
       },
@@ -396,8 +459,7 @@
       const c = CASES[key]; if(!c) return;
       caseTag.textContent = c.tag;
       caseTitle.textContent = c.title;
-      caseList.innerHTML = c.points.map(p=>`<li>${p}</li>`).join('
-');
+      caseList.innerHTML = c.points.map(p=>`<li>${p}</li>`).join('');
       caseLink.href = c.link;
       if(src) mainPhoto.src = src;
     }
@@ -410,16 +472,14 @@
     // init: портрет по умолчанию, НЕ переопределяем src
     applyCase('portrait');
 
-    /* === Checkout / Оплата === */
+    /* === Checkout / Оплата (полная форма) === */
     const co = document.getElementById('co');
-    const openCheckout = document.getElementById('openCheckout');
     const openCheckout2 = document.getElementById('openCheckout2');
     const closeCo = document.getElementById('closeCo');
 
     function showCo(){ co.classList.add('show'); location.hash = 'checkout'; updateSums(); }
     function hideCo(){ co.classList.remove('show'); if(location.hash === '#checkout') history.replaceState(null, '', ' '); }
-    openCheckout && openCheckout.addEventListener('click', showCo);
-    openCheckout2 && openCheckout2.addEventListener('click', showCo);
+    openCheckout2 && openCheckout2.addEventListener('click', ()=>{ openSheet(); });
     closeCo && closeCo.addEventListener('click', hideCo);
 
     const steps = Array.from(document.querySelectorAll('[data-step]'));
@@ -456,7 +516,7 @@
         'Компания: '+ (document.getElementById('coCompany').value||'-'),
         'Доставка ценности: '+ (document.getElementById('coDelivery').value||'-'),
         'Сумма к оплате: '+ fmt(total()),
-        'Способ оплаты: Payme/Click/карта/реквизиты (на выбор)',
+        'Способ оплаты: Uzcard/Humo/VISA/Payme/Click/карта (на выбор)',
         'Комментарий: демо‑счёт из карточки Uzum‑style',
       ].join('
 ');
@@ -469,7 +529,38 @@
     });
 
     // Авто‑открытие по хэшу #checkout
-    if(location.hash === '#checkout') showCo();
+    if(location.hash === '#checkout') openSheet();
+
+    /* === Быстрая оплата: bottom sheet === */
+    const sheet = document.getElementById('paySheet');
+    const overlay = document.getElementById('sheetOverlay');
+    const openCheckout = document.getElementById('openCheckout');
+    const closeSheet = document.getElementById('closeSheet');
+    const openFullCheckout = document.getElementById('openFullCheckout');
+    function openSheet(){ overlay.classList.add('show'); sheet.classList.add('show'); }
+    function hideSheet(){ overlay.classList.remove('show'); sheet.classList.remove('show'); }
+    openCheckout && openCheckout.addEventListener('click', openSheet);
+    closeSheet && closeSheet.addEventListener('click', hideSheet);
+    overlay && overlay.addEventListener('click', hideSheet);
+    openFullCheckout && openFullCheckout.addEventListener('click', ()=>{ hideSheet(); showCo(); });
+
+    // Отправка ставки в Telegram (через share)
+    document.getElementById('sendBid').addEventListener('click', ()=>{
+      const method = document.querySelector('input[name="pay"]:checked')?.value || 'Uzcard';
+      const bid = Number(document.getElementById('bidInput').value || 0);
+      const contact = document.getElementById('bidContact').value || '-';
+      const text = [
+        'Заявка (аукцион) — PM как продукт',
+        'Метод оплаты: '+method,
+        'Предложенная цена: '+ fmt(bid).replace(' UZS',' UZS'),
+        'Контакт: '+contact,
+        'Ссылка на карточку: https://kayoooma.github.io/project_manager'
+      ].join('
+');
+      const url = 'https://t.me/share/url?url='+ encodeURIComponent('https://kayoooma.github.io/superlink/') +'&text='+ encodeURIComponent(text);
+      window.open(url, '_blank');
+      hideSheet();
+    });
   </script>
 </body>
 </html>
