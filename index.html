@@ -226,7 +226,8 @@
             </ul>
             <div class="actions">
               <a id="caseLink" class="btn btn-ghost" href="https://kayoooma.github.io/project_manager" target="_blank" rel="noopener">Обо мне</a>
-              <a class="btn btn-outline" href="#checkout">🛍 Оформить по этому кейсу</a>
+              <a class="btn btn-primary" href="https://kayoooma.github.io/superlink/" target="_blank" rel="noopener">🛍 Оформить заказ</a>
+              <button class="btn btn-ghost" id="openQuickPay">💳 Быстрая оплата</button>
             </div>
           </div>
         </div>
@@ -277,7 +278,8 @@
         <div class="benefits"><span class="benefit">⚡ Первые результаты — с первой недели</span><span class="benefit">🛡️ Риски под контролем</span><span class="benefit">📦 MVP быстро, масштабирование планово</span><span class="benefit">📊 Метрики: DAU/MAU, Retention, LTV</span></div>
 
         <div class="cta">
-          <button class="btn btn-primary" id="openCheckout">🛍 Оформить заказ</button>
+          <a class="btn btn-primary" href="https://kayoooma.github.io/superlink/" target="_blank" rel="noopener">🛍 Оформить заказ</a>
+          <button class="btn btn-ghost" id="openQuickPay2">💳 Быстрая оплата</button>
           <a class="btn btn-ghost" href="https://kayoooma.github.io/project_manager" target="_blank" rel="noopener">⚡ Купить сейчас (перейти на сайт‑резюме)</a>
           <a class="btn btn-ghost" href="#specs">🧰 Характеристики</a>
         </div>
@@ -329,7 +331,7 @@
   </div>
 
   <!-- Sticky mobile bar -->
-  <div class="stickybar"><div><div style="font-size:12px;color:#64748b">Project Manager как продукт</div><div class="num">Готов к сотрудничеству</div></div><button class="btn btn-primary" id="openCheckout2">🛍 Оформить</button></div>
+  <div class="stickybar"><div><div style="font-size:12px;color:#64748b">Project Manager как продукт</div><div class="num">Готов к сотрудничеству</div></div><button class="btn btn-primary" id="openCheckout2">💳 Быстрая оплата</button></div>
 
   <!-- Быстрая оплата (bottom sheet) -->
   <div class="sheet-overlay" id="sheetOverlay"></div>
@@ -528,18 +530,17 @@
       hideCo();
     });
 
-    // Авто‑открытие по хэшу #checkout
-    if(location.hash === '#checkout') openSheet();
-
     /* === Быстрая оплата: bottom sheet === */
     const sheet = document.getElementById('paySheet');
     const overlay = document.getElementById('sheetOverlay');
-    const openCheckout = document.getElementById('openCheckout');
     const closeSheet = document.getElementById('closeSheet');
     const openFullCheckout = document.getElementById('openFullCheckout');
+    const openQuickPay = document.getElementById('openQuickPay');
+    const openQuickPay2 = document.getElementById('openQuickPay2');
     function openSheet(){ overlay.classList.add('show'); sheet.classList.add('show'); }
     function hideSheet(){ overlay.classList.remove('show'); sheet.classList.remove('show'); }
-    openCheckout && openCheckout.addEventListener('click', openSheet);
+    openQuickPay && openQuickPay.addEventListener('click', openSheet);
+    openQuickPay2 && openQuickPay2.addEventListener('click', openSheet);
     closeSheet && closeSheet.addEventListener('click', hideSheet);
     overlay && overlay.addEventListener('click', hideSheet);
     openFullCheckout && openFullCheckout.addEventListener('click', ()=>{ hideSheet(); showCo(); });
